@@ -1,0 +1,30 @@
+eureka:
+  instance:
+    hostname: ${EUREKA_CLIENT_HOST:danger-zone-service}
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URL}/eureka/
+    fetch-registry: true
+
+spring:
+  application:
+    name: COMMENT-SERVICE
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    url: ${POSTGRES_URL}/${POSTGRES_DB:opgmap_comment}?createDatabaseIfNotExist=true
+
+  liquibase:
+    change-log: classpath:changelog/changelog-master.yml
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+auth:
+  jwt:
+    secret-key: nN4=k-!}ptqESmcG?-@Tw#B_f'4IQLQYJ`Sd+bx*AnIn1gTd'#yfUN,6)CK<-&&
+    iss: opgmap.gateway
+    aud: opgmap.internal.services

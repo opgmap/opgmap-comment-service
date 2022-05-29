@@ -1,0 +1,3 @@
+rootProject.name = 'opgmap-comment-service'
+include 'liquibase'
+

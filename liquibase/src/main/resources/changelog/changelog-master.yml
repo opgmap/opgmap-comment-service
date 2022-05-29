@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: changelog/DDL/create-table-comment.yml
