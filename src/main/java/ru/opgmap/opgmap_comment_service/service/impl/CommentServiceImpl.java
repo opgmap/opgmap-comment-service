@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.opgmap.opgmap_comment_service.dto.CommentDto;
 import ru.opgmap.opgmap_comment_service.exception.model.EntityNotExistsException;
 import ru.opgmap.opgmap_comment_service.exception.utils.ExceptionMessagesGenerator;
+import ru.opgmap.opgmap_comment_service.kafka.dto.DeleteDangerZoneDto;
 import ru.opgmap.opgmap_comment_service.mapper.CommentMapper;
 import ru.opgmap.opgmap_comment_service.model.Comment;
 import ru.opgmap.opgmap_comment_service.model.UserLike;
@@ -101,4 +102,10 @@ public class CommentServiceImpl implements CommentService {
                 ExceptionMessagesGenerator.generateNotFoundMessage(ENTITY_NAME, id)
         )));
     }
+
+    @Override
+    public void deleteCommentsByDangerZone(UUID dangerZoneId) {
+        commentRepository.deleteAllByDangerZoneId(dangerZoneId);
+    }
+
 }

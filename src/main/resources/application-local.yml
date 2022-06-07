@@ -12,6 +12,21 @@ eureka:
     fetch-registry: true
 
 spring:
+  cloud:
+    function:
+      definition: deleteDangerZone
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+          replication-factor: 1
+      bindings:
+        deleteDangerZone-in-0:
+          group: dz-deleted-consumer-group
+          content-type: application/json
+          destination: dz-deleted
+
   application:
     name: COMMENT-SERVICE
   datasource:
