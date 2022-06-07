@@ -1,4 +1,4 @@
-package com.example.opgmap_danger_zone_service.openapi;
+package ru.opgmap.opgmap_comment_service.openapi;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

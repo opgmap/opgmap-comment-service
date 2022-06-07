@@ -1,4 +1,4 @@
-package com.example.opgmap_danger_zone_service.security;
+package ru.opgmap.opgmap_comment_service.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

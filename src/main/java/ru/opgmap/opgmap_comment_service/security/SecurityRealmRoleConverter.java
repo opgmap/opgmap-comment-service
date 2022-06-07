@@ -1,4 +1,4 @@
-package com.example.opgmap_danger_zone_service.security;
+package ru.opgmap.opgmap_comment_service.security;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;

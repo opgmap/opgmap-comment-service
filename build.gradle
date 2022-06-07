@@ -16,10 +16,6 @@ configurations {
 }
 
 repositories {
-    maven {
-        url 'http://localhost:7777/repository/maven-public/'
-        allowInsecureProtocol = true
-    }
     maven { url 'https://repo.spring.io/snapshot' }
     maven { url 'https://repo.spring.io/milestone' }
     mavenCentral()
@@ -36,10 +32,16 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+    implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.9'
+    implementation 'org.springdoc:springdoc-openapi-security:1.6.9'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
     implementation 'org.liquibase:liquibase-core:4.7.0'
 
     implementation project(':liquibase')
-    implementation 'ru.opgmap:opgmap-jwt-security-client:1.0.1-RELEASE'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

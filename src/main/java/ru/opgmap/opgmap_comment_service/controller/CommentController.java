@@ -1,6 +1,8 @@
 package ru.opgmap.opgmap_comment_service.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.opgmap.opgmap_comment_service.dto.CommentDto;
 import ru.opgmap.opgmap_comment_service.service.CommentService;
@@ -12,6 +14,9 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/comment/")
+@SecurityRequirement(name = "security_auth")
+@CrossOrigin("*")
+@PreAuthorize("isAuthenticated()")
 public class CommentController {
 
     private final CommentService commentService;
@@ -40,4 +45,5 @@ public class CommentController {
     public void deleteComment(@PathVariable UUID id) {
         commentService.deleteCommentById(id);
     }
+
 }

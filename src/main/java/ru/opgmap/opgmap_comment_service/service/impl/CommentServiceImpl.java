@@ -29,8 +29,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentMapper.fromDto(commentDto);
         comment.setCreated(LocalDateTime.now());
         comment.setLikes(0L);
-        commentRepository.save(comment);
-        return comment.getId();
+        return commentRepository.save(comment).getId();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotExistsException(
                         ExceptionMessagesGenerator.generateNotFoundMessage(ENTITY_NAME, id)));
-        comment.setLikes(comment.getLikes() + 1);
+        comment.setLikes(comment.getLikes() + (like ? 1 : -1));
         commentRepository.save(comment);
         return comment.getId();
     }
