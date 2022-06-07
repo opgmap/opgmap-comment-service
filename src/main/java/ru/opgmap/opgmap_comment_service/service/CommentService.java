@@ -1,19 +1,23 @@
 package ru.opgmap.opgmap_comment_service.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.opgmap.opgmap_comment_service.dto.CommentDto;
+import ru.opgmap.opgmap_comment_service.model.Comment;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface CommentService {
 
-    UUID saveComment(CommentDto commentDto);
+    CommentDto saveComment(CommentDto commentDto);
 
-    List<CommentDto> getAllCommentsByDangerZoneId(UUID dangerZoneId);
+    Page<Comment> getAllCommentsByDangerZoneId(UUID dangerZoneId, Pageable pageable);
 
     CommentDto updateComment(UUID id, CommentDto commentDto);
 
-    UUID likeComment(UUID id, boolean like);
+    CommentDto likeComment(UUID id, UUID uuid, boolean like);
 
     void deleteCommentById(UUID id);
+
+    CommentDto getById(UUID id);
 }

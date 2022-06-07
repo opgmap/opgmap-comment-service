@@ -1,44 +1,46 @@
 package ru.opgmap.opgmap_comment_service.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.opgmap.opgmap_comment_service.dto.CommentDto;
 import ru.opgmap.opgmap_comment_service.exception.model.EntityNotExistsException;
 import ru.opgmap.opgmap_comment_service.exception.utils.ExceptionMessagesGenerator;
 import ru.opgmap.opgmap_comment_service.mapper.CommentMapper;
 import ru.opgmap.opgmap_comment_service.model.Comment;
+import ru.opgmap.opgmap_comment_service.model.UserLike;
 import ru.opgmap.opgmap_comment_service.repository.CommentRepository;
 import ru.opgmap.opgmap_comment_service.service.CommentService;
+import ru.opgmap.opgmap_comment_service.service.UserLikeService;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentServiceImpl implements CommentService {
 
     private static final String ENTITY_NAME = "Comment";
 
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final UserLikeService userLikeService;
 
     @Override
-    public UUID saveComment(CommentDto commentDto) {
+    public CommentDto saveComment(CommentDto commentDto) {
         Comment comment = commentMapper.fromDto(commentDto);
         comment.setCreated(LocalDateTime.now());
         comment.setLikes(0L);
-        commentRepository.save(comment);
-        return comment.getId();
+        return commentMapper.toDto(commentRepository.save(comment));
     }
 
     @Override
-    public List<CommentDto> getAllCommentsByDangerZoneId(UUID dangerZoneId) {
-        List<Comment> comments = commentRepository.findAllByDangerZoneId(dangerZoneId);
-        return comments.stream()
-                .map(commentMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<Comment> getAllCommentsByDangerZoneId(UUID dangerZoneId, Pageable pageable) {
+        return commentRepository.findAllByDangerZoneId(dangerZoneId, pageable);
     }
 
     @Override
@@ -52,13 +54,37 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public UUID likeComment(UUID id, boolean like) {
+    public CommentDto likeComment(UUID id, UUID userId, boolean like) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotExistsException(
                         ExceptionMessagesGenerator.generateNotFoundMessage(ENTITY_NAME, id)));
-        comment.setLikes(comment.getLikes() + 1);
-        commentRepository.save(comment);
-        return comment.getId();
+
+        Optional<UserLike> userVoteOptional = userLikeService.findVote(id, userId);
+
+        UserLike userLike;
+
+        if (userVoteOptional.isPresent()) {
+            userLike = userVoteOptional.get();
+            if (like == userLike.isValue()) {
+                userLikeService.removeVote(userLike);
+                comment.setLikes(comment.getLikes() + ((like) ? -1 : 1));
+            } else {
+                userLike.setValue(like);
+                userLikeService.saveLike(userLike);
+                comment.setLikes(comment.getLikes() + ((like) ? 2 : -2));
+            }
+        } else {
+            userLike = UserLike.builder()
+                    .comment(comment)
+                    .userId(userId)
+                    .value(like)
+                    .created(LocalDateTime.now())
+                    .build();
+            userLikeService.saveLike(userLike);
+            comment.setLikes(comment.getLikes() + ((like) ? 1 : -1));
+        }
+
+        return commentMapper.toDto(commentRepository.save(comment));
     }
 
     @Override
@@ -67,5 +93,12 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new EntityNotExistsException(
                         ExceptionMessagesGenerator.generateNotFoundMessage(ENTITY_NAME, id)));
         commentRepository.delete(comment);
+    }
+
+    @Override
+    public CommentDto getById(UUID id) {
+        return commentMapper.toDto(commentRepository.findById(id).orElseThrow(() -> new EntityNotExistsException(
+                ExceptionMessagesGenerator.generateNotFoundMessage(ENTITY_NAME, id)
+        )));
     }
 }

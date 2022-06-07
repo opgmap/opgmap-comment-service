@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: changelog/DDL/create-table-comment.yml
+  - include:
+      file: changelog/DDL/create-table-user-like.yml

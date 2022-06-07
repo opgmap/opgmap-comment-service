@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -36,4 +37,8 @@ public class Comment {
 
     @Column(name = "updated")
     private LocalDateTime updated;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    private List<UserLike> userLikes;
+
 }

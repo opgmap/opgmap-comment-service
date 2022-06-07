@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: '2'
+      author: Dinar
+      changes:
+        - createTable:
+            tableName: user_like
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: comment_id
+                    referencedTableName: comment
+                    referencedColumnNames: id
+              - column:
+                  name: created
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: value
+                  type: boolean
+                  constraints:
+                    nullable: false
