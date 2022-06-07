@@ -13,5 +13,6 @@ public interface CommentRepository extends JpaRepository<Comment, UUID>,
 
     Page<Comment> findAllByDangerZoneId(UUID dangerZoneId, Pageable pageable);
 
+    void deleteAllByDangerZoneId(UUID dangerZoneId);
 
 }

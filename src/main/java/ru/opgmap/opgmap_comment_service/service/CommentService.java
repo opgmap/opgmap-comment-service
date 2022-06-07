@@ -3,6 +3,7 @@ package ru.opgmap.opgmap_comment_service.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.opgmap.opgmap_comment_service.dto.CommentDto;
+import ru.opgmap.opgmap_comment_service.kafka.dto.DeleteDangerZoneDto;
 import ru.opgmap.opgmap_comment_service.model.Comment;
 
 import java.util.UUID;
@@ -20,4 +21,7 @@ public interface CommentService {
     void deleteCommentById(UUID id);
 
     CommentDto getById(UUID id);
+
+    void deleteCommentsByDangerZone(UUID dangerZoneId);
+
 }
